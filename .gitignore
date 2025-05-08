@@ -1,0 +1,18 @@
+.idea
+.vscode
+*.venv
+logs
+*.log
+*__pycache__
+*.vscode
+0*
+*.idea
+/api/db.py
+
+# statics
+*static
+*.md5
+poetry.lock
+.github
+
+
