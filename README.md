@@ -17,8 +17,7 @@ This Django-based API helps users find the most cost-effective fuel stops along 
 poetry install
 ```
 
-2. Set up environment variables:
-Create a `.env` file in the project root with:
+
 ```
 OPENROUTE_API_KEY=your_api_key_here
 ```
@@ -43,33 +42,44 @@ python manage.py runserver 8003
 ### Get Optimal Fuel Route
 
 ```
-GET /fuelmap/{departureLocation}/{destinationLocation}/
+GET /fuelmap/
+
 ```
 
 Example:
 ```
-GET /fuelmap/New York/Los Angeles/
+GET /fuelmap/
+{
+    "start":"location",
+    "end": location
+}
 ```
 
 Response:
 ```json
 {
+    "status": "success",
     "route": {
-        "distance": 4500000,  // in meters
-        "duration": 144000,   // in seconds
-        "steps": [...]        // detailed route steps
+        "distance_miles": 1143.05,
+        "duration_minutes": 1173.22,
+        "fuel_stops": [
+            {
+                "station_name": "BUSY CORNER TRUCK STOP AND MARKET",
+                "location": {
+                    "lat": 47.5477103,
+                    "lng": -122.541408
+                },
+                "address": "I-24, EXIT 105 & US-41/SR-2, Manchester, TN",
+                "price_per_gallon": 3.049,
+                "gallons": 50.0,
+                "cost": 152.45,
+                "distance_from_start": 958.9041036182074
+            }
+        ],
+        "total_fuel_cost": 152.45,
+        "total_gallons": 114.3
     },
-    "fuel_stops": [
-        {
-            "location": "Chicago, IL",
-            "price_per_gallon": 3.45,
-            "distance": 1200000  // in meters
-        },
-        // ... more stops
-    ],
-    "total_cost": 450.75,
-    "total_distance": 4500000,
-    "estimated_fuel_used": 450000
+    "message": "Route calculated with optimal fuel stops"
 }
 ```
 

@@ -188,11 +188,8 @@ class RouteView(View):
         routes = data["routes"][0]
         
         total_distance_meters = routes['summary']['distance']
-        print(f"🔍 Total distance meters: {total_distance_meters}")
         total_distance_miles = total_distance_meters * 0.000621371
-        print(f"🔍 Total distance miles: {total_distance_miles}")
         num_stops_needed = max(0, int(total_distance_miles / MAX_RANGE))
-        print(f"🔍 Number of stops needed: {num_stops_needed}")
         geometry = polyline.decode(routes['geometry'])
         
         fuel_stops = []
@@ -201,14 +198,11 @@ class RouteView(View):
         last_stop_coords = start_coords
         
         sample_interval = max(1, len(geometry) // (num_stops_needed + 1))
-        print(f"🔍 Sample interval: {sample_interval}")
         for i in range(0, len(geometry), sample_interval):
-            print(f"🔍 Processing point {i} of {len(geometry)}")
             point = geometry[i]
             distance_from_last = geo.distance(last_stop_coords, point).miles
             if current_range - distance_from_last < 50 or (len(fuel_stops) < num_stops_needed and i >= len(geometry) - sample_interval):
-                print(f"🔍 Finding nearest station for point {i}")
-                best_station = nearest_station(point, FUEL_STATIONS, 20)
+                best_station = nearest_station(point, FUEL_STATIONS, 50)
                 if best_station:
                     gallons_needed = MAX_RANGE / VEHICLE_MPG
                     fuel_price = float(best_station["Retail Price"])
